@@ -1,0 +1,51 @@
+name: Deploy dashboard to GitHub Pages
+
+# Pages source is set to "GitHub Actions". This workflow publishes the
+# single-file Swara dashboard as the site index.html. It runs in demo mode
+# (API_BASE='') so it's fully self-contained — no backend required.
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - swara_affiliates_dashboard.html
+      - .github/workflows/deploy-pages.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Allow one concurrent deployment; let an in-progress run finish.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Build site
+        run: |
+          mkdir -p _site
+          cp swara_affiliates_dashboard.html _site/index.html
+          cp swara_affiliates_dashboard.html _site/dashboard.html
+
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
