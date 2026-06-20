@@ -5,6 +5,8 @@ affiliate video out**, with a cloaked trackable link and a live earnings
 dashboard. Built for the Indian market (rupee earnings, Amazon.in + Flipkart
 scraping; publishes to YouTube Shorts and Instagram Reels).
 
+**Live dashboard (demo mode):** https://saduravindra.github.io/react/
+
 ## Contents
 
 | Path | What |
