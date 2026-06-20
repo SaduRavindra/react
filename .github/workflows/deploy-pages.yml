@@ -39,6 +39,10 @@ jobs:
 
       - name: Configure Pages
         uses: actions/configure-pages@v5
+        with:
+          # Enable Pages (build type = GitHub Actions) on first run via the API,
+          # so no manual repo-settings toggle is needed.
+          enablement: true
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
