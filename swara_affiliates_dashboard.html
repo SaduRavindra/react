@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Swara Affiliates — Studio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<style>
+  :root {
+    --bg: #0f0d14; --panel: #1a1722; --panel-2: #221e2e; --line: #2e2940;
+    --text: #ece8f5; --muted: #9b93b0; --accent: #b07cff; --accent-2: #ffcaa6;
+    --good: #5fd49b; --bad: #ff7a8a; --radius: 16px;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: radial-gradient(1200px 600px at 80% -10%, #2a1f3d 0%, var(--bg) 55%);
+    color: var(--text); font-family: 'Outfit', system-ui, sans-serif; min-height: 100vh;
+  }
+  h1, h2, h3 { font-family: 'Fraunces', Georgia, serif; font-weight: 600; letter-spacing: -.01em; }
+  a { color: var(--accent); }
+  .wrap { max-width: 1100px; margin: 0 auto; padding: 28px 20px 80px; }
+  header { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+  .brand { display: flex; align-items: baseline; gap: 12px; }
+  .brand h1 { font-size: 30px; margin: 0; }
+  .brand .dot { color: var(--accent); }
+  .mode { font-size: 12px; color: var(--muted); border: 1px solid var(--line);
+    padding: 4px 10px; border-radius: 999px; }
+  .mode.live { color: var(--good); border-color: #2c5a45; }
+  .tabs { display: flex; gap: 8px; margin: 24px 0 18px; }
+  .tab { background: var(--panel); border: 1px solid var(--line); color: var(--muted);
+    padding: 10px 18px; border-radius: 999px; cursor: pointer; font-size: 14px; font-weight: 500; }
+  .tab.active { color: var(--text); border-color: var(--accent); background: var(--panel-2); }
+  .grid { display: grid; gap: 16px; }
+  .cards { grid-template-columns: repeat(4, 1fr); }
+  @media (max-width: 800px) { .cards { grid-template-columns: repeat(2, 1fr); } }
+  .card { background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius);
+    padding: 18px; }
+  .card .label { color: var(--muted); font-size: 12px; text-transform: uppercase; letter-spacing: .08em; }
+  .card .value { font-family: 'Fraunces'; font-size: 30px; margin-top: 6px; }
+  .two-col { grid-template-columns: 1.3fr 1fr; }
+  @media (max-width: 800px) { .two-col { grid-template-columns: 1fr; } }
+  .panel { background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); padding: 20px; }
+  label.field { display: block; font-size: 13px; color: var(--muted); margin: 14px 0 6px; }
+  input, select {
+    width: 100%; background: var(--panel-2); border: 1px solid var(--line); color: var(--text);
+    border-radius: 10px; padding: 11px 12px; font-family: inherit; font-size: 14px;
+  }
+  input:focus, select:focus { outline: none; border-color: var(--accent); }
+  button.primary {
+    margin-top: 16px; width: 100%; background: linear-gradient(135deg, var(--accent), #7c5cff);
+    color: #fff; border: none; border-radius: 10px; padding: 13px; font-weight: 600; font-size: 15px;
+    cursor: pointer;
+  }
+  button.primary:disabled { opacity: .5; cursor: default; }
+  .stages { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
+  .stage { font-size: 12px; padding: 6px 11px; border-radius: 999px; border: 1px solid var(--line);
+    color: var(--muted); }
+  .stage.done { color: var(--good); border-color: #2c5a45; }
+  .stage.active { color: var(--accent-2); border-color: #6b4a2e; animation: pulse 1.2s infinite; }
+  .stage.fail { color: var(--bad); border-color: #6b2c36; }
+  @keyframes pulse { 50% { opacity: .5; } }
+  table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  th, td { text-align: left; padding: 11px 10px; border-bottom: 1px solid var(--line); }
+  th { color: var(--muted); font-weight: 500; font-size: 12px; text-transform: uppercase; letter-spacing: .06em; }
+  .pill { font-size: 11px; padding: 3px 9px; border-radius: 999px; background: var(--panel-2);
+    border: 1px solid var(--line); color: var(--muted); }
+  .pill.live { color: var(--good); } .pill.failed, .pill.dead_letter { color: var(--bad); }
+  .copy, .mini { background: var(--panel-2); border: 1px solid var(--line); color: var(--text);
+    border-radius: 8px; padding: 6px 10px; cursor: pointer; font-size: 12px; }
+  .dest-input { font-size: 12px; padding: 6px 8px; }
+  .search { max-width: 280px; margin-bottom: 14px; }
+  .muted { color: var(--muted); }
+  .row-between { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+  canvas { max-height: 240px; }
+  .toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+    background: var(--panel-2); border: 1px solid var(--accent); padding: 10px 18px; border-radius: 10px;
+    opacity: 0; transition: opacity .2s; }
+  .toast.show { opacity: 1; }
+  .hidden { display: none !important; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="brand">
+      <h1>Swara<span class="dot">.</span></h1>
+      <span class="muted">affiliate video studio</span>
+    </div>
+    <span id="mode" class="mode">demo mode</span>
+  </header>
+
+  <div class="tabs">
+    <div class="tab active" data-tab="studio">Studio</div>
+    <div class="tab" data-tab="links">Links &amp; products</div>
+  </div>
+
+  <!-- STUDIO -->
+  <section id="studio">
+    <div class="grid cards" id="statCards"></div>
+
+    <div class="grid two-col" style="margin-top:16px">
+      <div class="panel">
+        <h3 style="margin-top:0">Create a video</h3>
+        <label class="field">Product URL</label>
+        <input id="productUrl" placeholder="https://www.amazon.in/dp/..." />
+        <label class="field">Platform</label>
+        <select id="platform">
+          <option value="telegram">Telegram</option>
+          <option value="youtube">YouTube Shorts</option>
+          <option value="instagram">Instagram Reels</option>
+          <option value="pinterest">Pinterest</option>
+        </select>
+        <button class="primary" id="generateBtn">Generate video</button>
+        <div class="stages" id="stages"></div>
+      </div>
+      <div class="panel">
+        <h3 style="margin-top:0">Earnings — last 7 days</h3>
+        <canvas id="earningsChart"></canvas>
+        <h3>By platform</h3>
+        <canvas id="platformChart"></canvas>
+      </div>
+    </div>
+
+    <div class="panel" style="margin-top:16px">
+      <div class="row-between"><h3 style="margin:0">Recent videos</h3>
+        <button class="mini" id="syncBtn">Sync earnings</button></div>
+      <table id="videosTable"><thead><tr>
+        <th>Title</th><th>Platform</th><th>Status</th><th>Views</th><th></th>
+      </tr></thead><tbody></tbody></table>
+    </div>
+  </section>
+
+  <!-- LINKS -->
+  <section id="links" class="hidden">
+    <div class="panel">
+      <h3 style="margin-top:0">Links &amp; products</h3>
+      <input id="linkSearch" class="search" placeholder="Search products…" />
+      <table id="linksTable"><thead><tr>
+        <th>Product</th><th>Cloaked link</th><th>Destination (editable)</th><th>Clicks</th><th>Earnings</th>
+      </tr></thead><tbody></tbody></table>
+    </div>
+  </section>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+// ── Configuration ────────────────────────────────────────────────────────
+const API_BASE  = '';   // '' = demo mode; set to backend URL to go live
+const API_TOKEN = '';   // match backend DASHBOARD_TOKEN to authenticate
+
+const PIPELINE = ['queued','scraping','scripting','voiceover','rendering','publishing','live'];
+const LIVE = !!API_BASE;
+document.getElementById('mode').textContent = LIVE ? 'live' : 'demo mode';
+if (LIVE) document.getElementById('mode').classList.add('live');
+
+// ── Tiny helpers ─────────────────────────────────────────────────────────
+const $ = (s, r=document) => r.querySelector(s);
+const $$ = (s, r=document) => [...r.querySelectorAll(s)];
+const inr = n => '₹' + Number(n||0).toLocaleString('en-IN', {maximumFractionDigits:2});
+function toast(msg){ const t=$('#toast'); t.textContent=msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),1800); }
+
+async function api(path, opts={}){
+  const headers = {'Content-Type':'application/json', ...(opts.headers||{})};
+  if (API_TOKEN) headers['Authorization'] = 'Bearer ' + API_TOKEN;
+  const res = await fetch(API_BASE + path, {...opts, headers});
+  if (!res.ok) throw new Error(await res.text());
+  return res.status === 204 ? null : res.json();
+}
+
+// ── Demo store (localStorage) ────────────────────────────────────────────
+const Demo = {
+  key: 'swara_demo_v1',
+  load(){ return JSON.parse(localStorage.getItem(this.key) || '{"videos":[],"links":[]}'); },
+  save(d){ localStorage.setItem(this.key, JSON.stringify(d)); },
+  seedIfEmpty(){
+    const d = this.load();
+    if (d.videos.length) return;
+    const titles = ['Wireless Earbuds Pro','Smart LED Strip 5m','Steel Water Bottle 1L'];
+    const plats = ['telegram','youtube','instagram'];
+    d.videos = titles.map((t,i)=>({ id:'demo'+i, title:t, platform:plats[i], status:'live',
+      views: 1200*(i+1), product_url:'https://www.amazon.in/dp/B0DEMO'+i,
+      created_at:new Date(Date.now()-i*864e5).toISOString() }));
+    d.links = d.videos.map((v,i)=>({ code:'sw'+(1000+i), video_id:v.id, title:v.title,
+      platform:v.platform, destination:v.product_url+'?tag=swara-21',
+      clicks: 80*(i+1), earnings: 640*(i+1) }));
+    this.save(d);
+  },
+  advance(){ // walk queued videos one stage forward each tick
+    const d = this.load(); let changed=false;
+    for (const v of d.videos){
+      const idx = PIPELINE.indexOf(v.status);
+      if (idx>=0 && idx<PIPELINE.length-1){ v.status=PIPELINE[idx+1]; v.views=v.views||0; changed=true; }
+    }
+    if (changed) this.save(d);
+    return d;
+  }
+};
+
+// ── Data access (demo vs live) ───────────────────────────────────────────
+async function getVideos(){ return LIVE ? api('/videos') : Demo.load().videos; }
+async function getLinks(){ return LIVE ? api('/links') : Demo.load().links; }
+async function getStats(){
+  if (LIVE) return api('/stats');
+  const d = Demo.load();
+  const totalEarnings = d.links.reduce((s,l)=>s+Number(l.earnings||0),0);
+  const totalClicks = d.links.reduce((s,l)=>s+Number(l.clicks||0),0);
+  const byP = {}; d.links.forEach(l=>byP[l.platform]=(byP[l.platform]||0)+Number(l.earnings||0));
+  const daily = {}; for(let i=6;i>=0;i--){ const dt=new Date(Date.now()-i*864e5).toISOString().slice(0,10);
+    daily[dt]=Math.round(totalEarnings/7*(0.6+Math.random()*0.8)); }
+  return { total_earnings: totalEarnings, total_clicks: totalClicks,
+    total_views: d.videos.reduce((s,v)=>s+Number(v.views||0),0), live_videos: d.videos.filter(v=>v.status==='live').length,
+    epc: totalClicks? totalEarnings/totalClicks : 0, by_platform: byP, daily_earnings: daily };
+}
+async function generate(url, platform){
+  if (LIVE) return api('/videos/generate', {method:'POST', body:JSON.stringify({product_url:url, platform})});
+  const d = Demo.load();
+  const id = 'v'+Date.now();
+  d.videos.unshift({ id, title:url.split('/').filter(Boolean).pop().replace(/[-_]/g,' ').slice(0,40)||'New product',
+    platform, status:'queued', views:0, product_url:url, created_at:new Date().toISOString() });
+  d.links.unshift({ code:'sw'+Math.floor(Math.random()*9000+1000), video_id:id,
+    title:'New product', platform, destination:url+'?tag=swara-21', clicks:0, earnings:0 });
+  Demo.save(d); return {id, status:'queued'};
+}
+async function repoint(code, destination){
+  if (LIVE) return api('/links/'+code, {method:'PATCH', body:JSON.stringify({destination})});
+  const d = Demo.load(); const l = d.links.find(x=>x.code===code); if(l) l.destination=destination; Demo.save(d);
+}
+async function syncEarnings(){ if (LIVE) return api('/sync/earnings', {method:'POST'}); toast('Demo: earnings simulated'); }
+
+// ── Rendering ────────────────────────────────────────────────────────────
+let earningsChart, platformChart;
+async function renderStats(){
+  const s = await getStats();
+  const cards = [
+    ['Total earnings', inr(s.total_earnings)],
+    ['Clicks', Number(s.total_clicks||0).toLocaleString('en-IN')],
+    ['Live videos', s.live_videos||0],
+    ['EPC', inr(s.epc)],
+  ];
+  $('#statCards').innerHTML = cards.map(([l,v])=>`<div class="card"><div class="label">${l}</div><div class="value">${v}</div></div>`).join('');
+
+  const days = Object.keys(s.daily_earnings||{}).sort();
+  const dvals = days.map(d=>Number(s.daily_earnings[d]));
+  earningsChart && earningsChart.destroy();
+  earningsChart = new Chart($('#earningsChart'), { type:'line',
+    data:{ labels: days.map(d=>d.slice(5)), datasets:[{ data:dvals, borderColor:'#b07cff',
+      backgroundColor:'rgba(176,124,255,.15)', fill:true, tension:.35, pointRadius:2 }]},
+    options:{ plugins:{legend:{display:false}}, scales:{ x:{grid:{display:false},ticks:{color:'#9b93b0'}},
+      y:{grid:{color:'#2e2940'},ticks:{color:'#9b93b0'}}}}});
+
+  const plats = Object.keys(s.by_platform||{});
+  platformChart && platformChart.destroy();
+  platformChart = new Chart($('#platformChart'), { type:'doughnut',
+    data:{ labels:plats, datasets:[{ data:plats.map(p=>Number(s.by_platform[p])),
+      backgroundColor:['#b07cff','#ffcaa6','#5fd49b','#ff7a8a'] }]},
+    options:{ plugins:{legend:{position:'bottom',labels:{color:'#9b93b0'}}}}});
+}
+
+async function renderVideos(){
+  const vids = await getVideos();
+  $('#videosTable tbody').innerHTML = vids.map(v=>`<tr>
+    <td>${v.title||'<span class="muted">processing…</span>'}</td>
+    <td><span class="pill">${v.platform}</span></td>
+    <td><span class="pill ${v.status}">${v.status}</span></td>
+    <td>${Number(v.views||0).toLocaleString('en-IN')}</td>
+    <td><button class="mini" data-del="${v.id}">Delete</button></td>
+  </tr>`).join('') || '<tr><td colspan="5" class="muted">No videos yet.</td></tr>';
+  $$('[data-del]').forEach(b=>b.onclick=async()=>{
+    if (LIVE) await api('/videos/'+b.dataset.del,{method:'DELETE'});
+    else { const d=Demo.load(); d.videos=d.videos.filter(x=>x.id!==b.dataset.del); Demo.save(d); }
+    refresh();
+  });
+}
+
+async function renderLinks(){
+  const q = ($('#linkSearch').value||'').toLowerCase();
+  const links = (await getLinks()).filter(l=>(l.title||'').toLowerCase().includes(q));
+  const domain = 'swara.link';
+  $('#linksTable tbody').innerHTML = links.map(l=>{
+    const short = `https://${domain}/go/${l.code}`;
+    return `<tr>
+      <td>${l.title||'—'}<br><span class="pill">${l.platform||''}</span></td>
+      <td><code style="font-size:12px">${short}</code> <button class="copy" data-copy="${short}">Copy</button></td>
+      <td><input class="dest-input" data-code="${l.code}" value="${l.destination||''}" /></td>
+      <td>${Number(l.clicks||0).toLocaleString('en-IN')}</td>
+      <td>${inr(l.earnings)}</td>
+    </tr>`;
+  }).join('') || '<tr><td colspan="5" class="muted">No links yet.</td></tr>';
+  $$('[data-copy]').forEach(b=>b.onclick=()=>{ navigator.clipboard.writeText(b.dataset.copy); toast('Link copied'); });
+  $$('.dest-input').forEach(i=>i.onchange=async()=>{ await repoint(i.dataset.code, i.value); toast('Destination repointed'); });
+}
+
+// ── Pipeline stage display ───────────────────────────────────────────────
+function renderStages(status){
+  const idx = PIPELINE.indexOf(status);
+  $('#stages').innerHTML = PIPELINE.map((s,i)=>{
+    let cls='stage'; if(status==='failed'||status==='dead_letter') cls+=' fail';
+    else if(i<idx) cls+=' done'; else if(i===idx) cls+=' active';
+    return `<span class="${cls}">${s}</span>`;
+  }).join('');
+}
+
+// ── Wiring ───────────────────────────────────────────────────────────────
+$$('.tab').forEach(t=>t.onclick=()=>{
+  $$('.tab').forEach(x=>x.classList.remove('active')); t.classList.add('active');
+  $('#studio').classList.toggle('hidden', t.dataset.tab!=='studio');
+  $('#links').classList.toggle('hidden', t.dataset.tab!=='links');
+});
+$('#linkSearch').oninput = renderLinks;
+$('#syncBtn').onclick = async()=>{ await syncEarnings(); refresh(); };
+
+let trackId = null;
+$('#generateBtn').onclick = async()=>{
+  const url = $('#productUrl').value.trim();
+  if(!/^https?:\/\//.test(url)){ toast('Enter a valid product URL'); return; }
+  const btn = $('#generateBtn'); btn.disabled=true; btn.textContent='Generating…';
+  try {
+    const v = await generate(url, $('#platform').value);
+    trackId = v.id; renderStages('queued'); $('#productUrl').value='';
+    toast('Job queued');
+  } catch(e){ toast('Error: '+e.message); }
+  btn.disabled=false; btn.textContent='Generate video';
+  refresh();
+};
+
+async function pollTracked(){
+  if(!trackId) return;
+  let v;
+  if (LIVE) { try { v = await api('/videos/'+trackId); } catch { return; } }
+  else { v = Demo.load().videos.find(x=>x.id===trackId); }
+  if(!v) return;
+  renderStages(v.status);
+  if(['live','failed','dead_letter'].includes(v.status)) trackId=null;
+}
+
+async function refresh(){ await Promise.all([renderStats(), renderVideos(), renderLinks()]); }
+
+// ── Boot ─────────────────────────────────────────────────────────────────
+if (!LIVE) Demo.seedIfEmpty();
+refresh();
+setInterval(async()=>{ if(!LIVE) Demo.advance(); await pollTracked(); refresh(); }, 2000);
+</script>
+</body>
+</html>
