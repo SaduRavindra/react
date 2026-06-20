@@ -40,8 +40,8 @@ Legend: `[x]` done · `[~]` scaffolded / stubbed (needs creds or live tuning) ·
       *(stub fallback when key unset)*
 - [~] Render — Shotstack 9:16 timeline → MP4 (`pipeline/video_assembler.py`)
       *(stub fallback when key unset)*
-- [~] Publish — YouTube / Instagram / Pinterest / Telegram (`pipeline/publisher.py`)
-      *(Telegram caption building done; live posting needs bot token)*
+- [~] Publish — YouTube Shorts / Instagram Reels (`pipeline/publisher.py`)
+      *(caption building done; live posting needs OAuth tokens)*
 
 ## Links & affiliate
 
@@ -63,9 +63,9 @@ Legend: `[x]` done · `[~]` scaffolded / stubbed (needs creds or live tuning) ·
 ## Needs credentials / live tuning
 
 - [ ] Scraper selectors per store (markup drifts)
-- [ ] Social OAuth tokens (YouTube / Instagram / Pinterest)
+- [ ] YouTube OAuth + resumable upload (live `_publish_youtube`)
+- [ ] Instagram Graph API token + publish flow (live `_publish_instagram`)
 - [ ] Real earnings sync from Amazon Associates report
-- [ ] Telegram live posting (bot token + channel)
 
 ## Later (roadmap)
 

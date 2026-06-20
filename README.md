@@ -3,7 +3,7 @@
 Automated affiliate-marketing video studio. **Product URL in → published
 affiliate video out**, with a cloaked trackable link and a live earnings
 dashboard. Built for the Indian market (rupee earnings, Amazon.in + Flipkart
-scraping, Telegram as a first-class channel).
+scraping; publishes to YouTube Shorts and Instagram Reels).
 
 ## Contents
 

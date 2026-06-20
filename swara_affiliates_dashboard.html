@@ -108,10 +108,8 @@
         <input id="productUrl" placeholder="https://www.amazon.in/dp/..." />
         <label class="field">Platform</label>
         <select id="platform">
-          <option value="telegram">Telegram</option>
           <option value="youtube">YouTube Shorts</option>
           <option value="instagram">Instagram Reels</option>
-          <option value="pinterest">Pinterest</option>
         </select>
         <button class="primary" id="generateBtn">Generate video</button>
         <div class="stages" id="stages"></div>
@@ -179,7 +177,7 @@ const Demo = {
     const d = this.load();
     if (d.videos.length) return;
     const titles = ['Wireless Earbuds Pro','Smart LED Strip 5m','Steel Water Bottle 1L'];
-    const plats = ['telegram','youtube','instagram'];
+    const plats = ['youtube','instagram','youtube'];
     d.videos = titles.map((t,i)=>({ id:'demo'+i, title:t, platform:plats[i], status:'live',
       views: 1200*(i+1), product_url:'https://www.amazon.in/dp/B0DEMO'+i,
       created_at:new Date(Date.now()-i*864e5).toISOString() }));

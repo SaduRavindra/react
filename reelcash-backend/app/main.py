@@ -27,7 +27,7 @@ from .reliability import queue as queue_mod
 configure_logging()
 logger = get_logger("api")
 
-VALID_PLATFORMS = {"youtube", "instagram", "pinterest", "telegram"}
+VALID_PLATFORMS = {"youtube", "instagram"}
 
 
 @asynccontextmanager
@@ -71,7 +71,7 @@ def _jsonable(obj):
 # --------------------------------------------------------------------------- #
 class GenerateRequest(BaseModel):
     product_url: str
-    platform: str = "telegram"
+    platform: str = "youtube"
 
     @field_validator("platform")
     @classmethod

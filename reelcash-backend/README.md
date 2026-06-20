@@ -3,7 +3,7 @@
 Automated affiliate-marketing video studio. **Product URL in → published
 affiliate video out**, with a cloaked trackable link and a live earnings
 dashboard. Built for the Indian market (rupee earnings, Amazon.in + Flipkart
-scraping, Telegram as a first-class channel).
+scraping; publishes to YouTube Shorts and Instagram Reels).
 
 ## Quick start (in-memory demo)
 
@@ -20,7 +20,7 @@ completes. Open `http://localhost:8000/health`, then:
 ```bash
 curl -X POST localhost:8000/videos/generate \
   -H 'content-type: application/json' \
-  -d '{"product_url":"https://www.amazon.in/dp/B0EXAMPLE","platform":"telegram"}'
+  -d '{"product_url":"https://www.amazon.in/dp/B0EXAMPLE","platform":"youtube"}'
 ```
 
 Watch the job walk `queued → scraping → … → live` via `GET /videos/{id}`.
@@ -28,7 +28,7 @@ Watch the job walk `queued → scraping → … → live` via `GET /videos/{id}`
 ## The pipeline (5 checkpointed steps)
 
 `scrape → script (Claude) → voiceover (ElevenLabs) → render (Shotstack) →
-publish (YouTube/Instagram/Pinterest/Telegram)`
+publish (YouTube Shorts / Instagram Reels)`
 
 Each step saves a checkpoint, retries transient errors with backoff+jitter, and
 is fronted by a circuit breaker + token-bucket rate limiter. A render failure
@@ -43,7 +43,7 @@ Set the relevant env vars (see `.env.example`):
 - `ANTHROPIC_API_KEY`, `ELEVENLABS_API_KEY` + `ELEVENLABS_VOICE_ID`,
   `SHOTSTACK_API_KEY` — the real providers (otherwise stubbed).
 - `AMAZON_ASSOCIATE_TAG`, `LINK_DOMAIN` — affiliate tagging + cloaked links.
-- `TELEGRAM_BOT_TOKEN` + `TELEGRAM_CHANNEL` — Telegram publishing.
+- YouTube / Instagram OAuth tokens — for live publishing (otherwise stubbed).
 - `DASHBOARD_TOKEN` — bearer token gating the data API.
 - `QUEUE_BACKEND` (`inproc`/`cloudtasks`/`sqs`) + `WORKER_SECRET`.
 

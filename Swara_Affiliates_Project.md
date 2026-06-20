@@ -7,7 +7,8 @@ dashboard.
 
 **Product URL in → published affiliate video out, with a cloaked trackable link
 and a live earnings dashboard.** Built for the Indian market: rupee earnings,
-Amazon.in + Flipkart scraping, and Telegram as a first-class channel.
+Amazon.in + Flipkart scraping, and publishing to YouTube Shorts and
+Instagram Reels.
 
 ## Architecture
 
@@ -33,7 +34,8 @@ Dashboard (Vercel) ──HTTPS──► FastAPI service ──enqueue──► D
    CTA, hashtags). *Expensive → checkpointed.*
 3. **Voiceover** — ElevenLabs → MP3 in storage. *Paid → checkpointed.*
 4. **Render** — Shotstack builds a 9:16 vertical MP4.
-5. **Publish** — mints a cloaked link, posts to the chosen platform.
+5. **Publish** — mints a cloaked link, posts to the chosen platform
+   (YouTube Shorts or Instagram Reels) with the link in the description / caption.
 
 Statuses: `queued → scraping → scripting → voiceover → rendering → publishing →
 live` (or `retrying` / `failed` / `dead_letter`).

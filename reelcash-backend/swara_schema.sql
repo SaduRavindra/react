@@ -13,7 +13,7 @@ DO $$ BEGIN
 EXCEPTION WHEN duplicate_object THEN NULL; END $$;
 
 DO $$ BEGIN
-    CREATE TYPE platform AS ENUM ('youtube','instagram','pinterest','telegram');
+    CREATE TYPE platform AS ENUM ('youtube','instagram');
 EXCEPTION WHEN duplicate_object THEN NULL; END $$;
 
 -- --- videos (the hub) ----------------------------------------------------- --

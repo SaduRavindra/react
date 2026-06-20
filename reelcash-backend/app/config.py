@@ -46,10 +46,6 @@ class Settings:
     AMAZON_ASSOCIATE_TAG = _get("AMAZON_ASSOCIATE_TAG")
     LINK_DOMAIN = _get("LINK_DOMAIN", "swara.link")
 
-    # Telegram
-    TELEGRAM_BOT_TOKEN = _get("TELEGRAM_BOT_TOKEN")
-    TELEGRAM_CHANNEL = _get("TELEGRAM_CHANNEL")
-
     # Queue / worker
     QUEUE_BACKEND = _get("QUEUE_BACKEND", "inproc")
     WORKER_SECRET = _get("WORKER_SECRET")

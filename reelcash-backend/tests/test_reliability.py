@@ -71,7 +71,7 @@ async def test_token_bucket_paces():
 
 
 async def test_checkpoint_resume_skips_paid_step():
-    video = await db.create_video("https://example.com/p", "telegram")
+    video = await db.create_video("https://example.com/p", "youtube")
     vid = video["id"]
     calls = {"n": 0}
 

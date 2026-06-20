@@ -5,7 +5,8 @@
 - A cloud account (GCP Cloud Run **or** AWS ECS Fargate)
 - Supabase (or Cloud SQL) for Postgres
 - Amazon Associates (commission tag)
-- A Telegram bot (BotFather) + a channel
+- A Google Cloud project with the YouTube Data API (OAuth) for YouTube Shorts
+- A Meta app with the Instagram Graph API for Instagram Reels
 
 ## 1. Run locally in-memory
 ```bash
@@ -54,7 +55,10 @@ gcloud run deploy swara-api --source . \
 - Add a log-based alert on `jsonPayload.status="dead_letter"`.
 - Optionally set `ALERT_WEBHOOK` for Slack/Discord dead-letter alerts.
 
-## 9. Telegram first channel
-- Create a bot via BotFather, get `TELEGRAM_BOT_TOKEN`.
-- Add the bot as an admin of your channel; set `TELEGRAM_CHANNEL` (e.g. `@swaradeals`).
-- Generate a video on the Telegram platform and confirm the post + Buy-now button.
+## 9. Publishing channels (YouTube + Instagram)
+- **YouTube Shorts:** create OAuth credentials for the YouTube Data API, wire the
+  token + resumable MP4 upload into `_publish_youtube` (`pipeline/publisher.py`).
+- **Instagram Reels:** create a Meta app, get a Graph API token, wire the media
+  container → publish flow into `_publish_instagram`.
+- Generate a video on each platform and confirm the post + cloaked link in the
+  description / caption.
